@@ -26,7 +26,7 @@
             <td data-th="Valor Unitario" class="text-center">{{$details['price']}}</td>
             <td data-th="SubTotal" class="text-center">$<span class="product-subtotal">{{$details['price'] * $details['quantity']}}</span></td>
             <td class="text-center">
-                <button class="btn btn-primary btn-sm update-from-invoice" data-id="{{$id}}"><i class="fa fa-refresh"></i></button>
+                <button class="btn btn-primary btn-sm update-invoice" data-id="{{$id}}"><i class="fa fa-refresh"></i></button>
                 <button class="btn btn-danger btn-sm remove-from-invoice" data-id="{{$id}}"><i class="fa fa-trash-o"></i></button>
             </td>
         </tr>
@@ -46,7 +46,7 @@
 
 @section('scripts')
     <script type="text/javascript">
-        $('.update-from-invoice').click(function (e) {
+        $('.update-invoice').click(function (e) {
             e.preventDefault();
 
             var ele = $(this);
@@ -56,7 +56,7 @@
             var invoice_total = $(".invoice-total");
 
             $.ajax({
-                url: '{{url('update-from-invoice')}}',
+                url: '{{url('update-invoice')}}',
                 method:"PATCH",
                 data: {_token: '{{csrf_token()}}', id: ele.attr('data-id'), quantity: quantity},
                 dataType: "json",
