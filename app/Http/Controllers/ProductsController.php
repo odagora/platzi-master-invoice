@@ -12,4 +12,109 @@ class ProductsController extends Controller
         $products = Product::all();
         return view('products', compact('products'));
     }
+
+    public function invoice() {
+
+        //$data = session()->get('invoice');
+
+        return view('invoice');
+    }
+
+    public function addToInvoice($id){
+
+        $product = Product::find($id);
+
+        //Check if there is a product
+        if(!$product){
+
+            abort(404);
+        }
+
+        $invoice = session()->get('invoice');
+
+        //return redirect()->back()->with('success', 'Producto acgregado satisfactoriamente');
+
+         //Check if cart is empty then this is the first product
+        if(!$invoice){
+
+            $invoice = [
+                $id => [
+                    "name" => $product->name,
+                    "quantity" => 1,
+                    "price" => $product->price
+                ]
+            ];
+
+            session()->put('invoice', $invoice);
+
+            $htmlCart = view('_header_invoice')->render();
+
+            return response()->json(['msg' => 'Producto agregado satisfactoriamente', 'data' => $htmlCart]);
+        }
+
+        //If cart not empty then check if this product exists and increment quantity
+        if(isset($invoice[$id])){
+
+            $invoice[$id]['quantity']++;
+            session()->put('invoice', $invoice);
+
+            $htmlCart = view('_header_invoice')->render();
+
+            return response()->json(['msg' => 'Producto agregado satisfactoriamente', 'data' => $htmlCart]);
+        }
+
+        //If product doesn't exist add it to the invoice with quantity = 1
+        $invoice[$id] = [
+            "name" => $product->name,
+            "quantity" => 1,
+            "price" => $product->price
+        ];
+
+        session()->put('invoice', $invoice);
+
+        $htmlCart = view('_header_invoice')->render();
+
+        return response()->json(['msg' => 'Producto agregado satisfactoriamente', 'data' => $htmlCart]);
+    }
+
+    public function remove(Request $request){
+
+        if($request->id){
+
+            $invoice = session()->get('invoice');
+
+            if(isset($invoice[$request->id])){
+                
+                unset($invoice[$request->id]);
+
+                session()->put('invoice', $invoice);
+            }
+
+            $total = $this->getInvoiceTotal();
+
+            $htmlCart = view('_header_invoice')->render();
+
+            return response()->json(['msg' => 'Producto eliminado satisfactoriamente', 'data' => $htmlCart, 'total' => $total]);
+        }
+    }
+
+    /**
+     * getInvoiceTotal
+     *
+     * @return float/int
+     */
+    private function getInvoiceTotal(){
+
+        $total = 0;
+
+        $invoice = session()->get('invoice');
+
+        foreach($invoice as $id => $details) {
+            $total += $details['price'] * $details['quantity'];
+        }
+
+        return $total;
+
+    }
+
 }

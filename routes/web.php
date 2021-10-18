@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'App\Http\Controllers\ProductsController@index');
 
+Route::get('/invoice', 'App\Http\Controllers\ProductsController@invoice');
+
+Route::get('/add-to-invoice/{id}','App\Http\Controllers\ProductsController@addToInvoice');
+
+Route::delete('remove-from-invoice', 'App\Http\Controllers\ProductsController@remove');
+
 // Route::get('/', function () {
 //     return view('Welcome');
 // });
