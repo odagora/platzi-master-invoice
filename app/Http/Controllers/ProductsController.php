@@ -97,6 +97,21 @@ class ProductsController extends Controller
         }
     }
 
+    public function discount(Request $request){
+
+        if($request->discount){
+
+            $total = $this->getInvoiceTotal();
+
+            if($request->discount == 'promo30'){
+                $total *= 0.7;
+                $total = number_format($total, 0);
+                $htmlCart = view('_header_invoice')->render();
+                return response()->json(['msg' => 'Descuento aplicado satisfactoriamente', 'total' => $total, 'data' => $htmlCart,]);
+            }
+        }
+    }
+
     public function remove(Request $request){
 
         if($request->id){

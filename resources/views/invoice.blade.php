@@ -23,7 +23,7 @@
         <tr>
             <td data-th="Producto" class="text-center">{{$details['name']}}</td>
             <td data-th="Cantidad" class="text-center"><input type="number" value="{{$details['quantity']}}" class="form-control quantity"></td>
-            <td data-th="Valor Unitario" class="text-center">{{$details['price']}}</td>
+            <td data-th="Valor Unitario" class="text-center">$<span>{{$details['price']}}</span></td>
             <td data-th="SubTotal" class="text-center">$<span class="product-subtotal">{{$details['price'] * $details['quantity']}}</span></td>
             <td class="text-center">
                 <button class="btn btn-primary btn-sm update-invoice" data-id="{{$id}}"><i class="fa fa-refresh"></i></button>
@@ -34,6 +34,16 @@
     @endif
     </tbody>
     <tfoot>
+        <tr>
+            <td colspan="2" class="hidden-xs"></td>
+            <td class="text-right"><strong>Promo 30%:</strong></td>
+            <td class="hidden-xs">
+                <input type="text" class="form-control discount">
+            </td>
+            <td class="text-center">
+                <button class="btn btn-success discount-invoice">Aplicar descuento</button>
+            </td>
+        </tr>
         <tr>
             <td><a href="{{url('/')}}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Seguir comprando</a></td>
             <td colspan="2" class="hidden-xs"></td>
@@ -93,6 +103,29 @@
                     }
                 });
             }
+        });
+        $('.discount-invoice').click(function (e) {
+            e.preventDefault();
+
+            var ele = $(this);
+            var parent_row = ele.parents("tr");
+            var discount = parent_row.find(".discount").val();
+            // var product_subtotal = parent_row.find("span.product-subtotal");
+            var invoice_total = $(".invoice-total");
+
+            $.ajax({
+                url: '{{url('discount-invoice')}}',
+                method:"PATCH",
+                data: {_token: '{{csrf_token()}}', id: ele.attr('data-id'), discount: discount},
+                dataType: "json",
+                success: function (response) {
+                    $('span#status').html('<div class="alert alert-success">'+response.msg+'</div>');
+
+                    $('#header-bar').html(response.data);
+
+                    invoice_total.text(response.total);
+                }
+            });
         });
     </script>
 @endsection

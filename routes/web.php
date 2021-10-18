@@ -21,6 +21,8 @@ Route::get('/add-to-invoice/{id}','App\Http\Controllers\ProductsController@addTo
 
 Route::patch('update-invoice', 'App\Http\Controllers\ProductsController@update');
 
+Route::patch('discount-invoice', 'App\Http\Controllers\ProductsController@discount');
+
 Route::delete('remove-from-invoice', 'App\Http\Controllers\ProductsController@remove');
 
 // Route::get('/', function () {
