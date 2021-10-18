@@ -16,11 +16,11 @@
 </head>
 <body>
     <div class="container">
-        <div class="row">
+        <div class="row" id="header-bar">
             @include('_header_invoice')
         </div>
     </div>
-    <div class="container">
+    <div class="container page">
         @yield('content')
     </div>
 @yield('scripts')

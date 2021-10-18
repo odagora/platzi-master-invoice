@@ -77,6 +77,26 @@ class ProductsController extends Controller
         return response()->json(['msg' => 'Producto agregado satisfactoriamente', 'data' => $htmlCart]);
     }
 
+    public function update(Request $request){
+
+        if($request->id and $request->quantity){
+
+            $invoice = session()->get('invoice');
+
+            $invoice[$request->id]['quantity'] = $request->quantity;
+
+            session()->put('invoice', $invoice);
+
+            $subTotal = $invoice[$request->id]['quantity'] * $invoice[$request->id]['price'];
+
+            $total = $this->getInvoiceTotal();
+
+            $htmlCart = view('_header_invoice')->render();
+
+            return response()->json(['msg' => 'Factura actualizada satisfactoriamente', 'total' => $total, 'subTotal' => $subTotal, 'data' => $htmlCart]);
+        }
+    }
+
     public function remove(Request $request){
 
         if($request->id){
@@ -84,7 +104,7 @@ class ProductsController extends Controller
             $invoice = session()->get('invoice');
 
             if(isset($invoice[$request->id])){
-                
+
                 unset($invoice[$request->id]);
 
                 session()->put('invoice', $invoice);

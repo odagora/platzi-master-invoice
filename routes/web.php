@@ -19,6 +19,8 @@ Route::get('/invoice', 'App\Http\Controllers\ProductsController@invoice');
 
 Route::get('/add-to-invoice/{id}','App\Http\Controllers\ProductsController@addToInvoice');
 
+Route::patch('update-from-invoice', 'App\Http\Controllers\ProductsController@update');
+
 Route::delete('remove-from-invoice', 'App\Http\Controllers\ProductsController@remove');
 
 // Route::get('/', function () {
