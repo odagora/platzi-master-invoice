@@ -38,7 +38,7 @@
             <td colspan="2" class="hidden-xs"></td>
             <td class="text-right"><strong>Promo 30%:</strong></td>
             <td class="hidden-xs">
-                <input type="text" class="form-control discount">
+                <input type="text" class="form-control discount" placeholder="promo30">
             </td>
             <td class="text-center">
                 <button class="btn btn-success discount-invoice">Aplicar descuento</button>
@@ -116,7 +116,7 @@
             $.ajax({
                 url: '{{url('discount-invoice')}}',
                 method:"PATCH",
-                data: {_token: '{{csrf_token()}}', id: ele.attr('data-id'), discount: discount},
+                data: {_token: '{{csrf_token()}}', discount: discount},
                 dataType: "json",
                 success: function (response) {
                     $('span#status').html('<div class="alert alert-success">'+response.msg+'</div>');

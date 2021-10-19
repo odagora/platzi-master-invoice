@@ -1,6 +1,26 @@
 <?php
 
 use Illuminate\Support\Str;
+use Monolog\Handler\IFTTTHandler;
+
+/**
+ * Heroku and Localhost env variables
+ */
+
+$url = getenv("CLEARDB_DATABASE_URL");
+
+if(!empty($url)){
+    $url = parse_url($url);
+    $host = $url['host'];
+    $username = $url['user'];
+    $password = $url['pass'];
+    $database = substr($url['path'], 1);
+} else {
+    $host       = env('DB_HOST', '127.0.0.1');
+    $username   = env('DB_USERNAME', 'forge');
+    $password   = env('DB_PASSWORD', '');
+    $database   = env('DB_DATABASE', 'forge');
+}
 
 return [
 
@@ -46,11 +66,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => $host,
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => $database,
+            'username' => $username,
+            'password' => $password,
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
